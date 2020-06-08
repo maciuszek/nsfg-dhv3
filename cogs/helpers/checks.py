@@ -105,27 +105,4 @@ def have_exp(exp_needed):
     return commands.check(predicate)
 
 
-DISCORD_BOTS_ORG_API = 'https://discordbots.org/api'
 session = aiohttp.ClientSession()
-
-
-class NoVotesOnDBL(commands.CheckFailure):
-    pass
-
-
-def voted_lately():
-    async def predicate(ctx):
-        player = ctx.message.author
-
-        headers = {'authorization': ctx.bot.discordbots_org_key, 'content-type': 'application/json'}
-
-        url = '{0}/bots/{1.user.id}/check?userId={2.id}'.format(DISCORD_BOTS_ORG_API, ctx.bot, player)
-        async with session.get(url, headers=headers) as resp:
-            cond = bool((await resp.json())['voted'])
-
-        if cond:
-            return True
-        else:
-            raise NoVotesOnDBL
-
-    return commands.check(predicate)

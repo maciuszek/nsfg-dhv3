@@ -123,7 +123,7 @@ class SetupWizzard(commands.Cog):
                                                        "If there is none, congrats! You passed the tests brilliantly!\n"
                                                        "If you are ready to continue with the setup, use the command `dh!setup_settings`. If you just want to play, use `dh!add_channel`. Once used, "
                                                        "ducks will spawn automatically.\n"
-                                                       "Thanks for flying DucksAir. If you have any question, we are here to help at https://discord.gg/2BksEkV",
+                                                       "Thanks for flying DucksAir.",
                                                        language))
 
     @commands.command()
@@ -141,7 +141,6 @@ I'll give you the most used parameters, and let you change them if you want. Any
 **1/ Language used**:
     \* If you speak french, use `dh!settings set language fr_FR`
     \* If you speak spanish, use `dh!settings set language es_ES`
-    \* Another language we don't fully support yet? Help us translate DuckHunt! Find us at https://discord.gg/2BksEkV.
     
 **2/ Ducks Per Day**:
     This is the number of ducks that will spawn per day. They spawn at random intervals, but you can configure the number of ducks that will spawn.

@@ -39,15 +39,15 @@ class Database:
             return self._channel_dbid_cache[channel]
         else:
 
-            row = self.database.query("SELECT id, channel_name FROM channels WHERE server=:server_id AND channel=:channel_id "
-                                      "LIMIT 1;", server_id=channel.guild.id, channel_id=channel.id)
+            row = self.defensive_query(query=f"SELECT id, channel_name FROM channels WHERE server={channel.guild.id} AND channel={channel.id} "
+                                      "LIMIT 1;")
 
             if row.first():
                 id_ = row.first().id
                 self._channel_dbid_cache[channel] = id_
 
                 if channel.name != row.first().channel_name:
-                    self.database.query("UPDATE channels SET channel_name = :channel_name WHERE id=:id", id=id_, channel_name=channel.name)
+                    self.defensive_query(query=f"UPDATE channels SET channel_name = {channel.name} WHERE id={id_}")
                 return id_
             else:
                 return None
@@ -56,8 +56,7 @@ class Database:
         if channel in self._channel_enabled_cache.keys():
             return self._channel_enabled_cache[channel]
 
-        row = self.database.query("SELECT enabled FROM channels WHERE server=:server_id AND channel=:channel_id "
-                                  "LIMIT 1;", server_id=channel.guild.id, channel_id=channel.id)
+        row = self.defensive_query(query=f"SELECT enabled FROM channels WHERE server={channel.guild.id} AND channel={channel.id} LIMIT 1;")
         if row.first():
             res = bool(row.first().enabled)
             self._channel_enabled_cache[channel] = res
@@ -66,27 +65,27 @@ class Database:
             return False  # If the channel is not in the DB, it's not enabled
 
     async def enable_channel(self, channel):
-        self.database.query("INSERT INTO channels (server, channel, enabled) VALUES (:server_id, :channel_id, 1) "
-                            "ON DUPLICATE KEY UPDATE enabled=1", server_id=channel.guild.id, channel_id=channel.id)
+        self.defensive_query(query=f"INSERT INTO channels (server, channel, enabled) VALUES ({channel.guild.id}, {channel.id}, 1) "
+                            "ON DUPLICATE KEY UPDATE enabled=1")
         self._channel_enabled_cache[channel] = True
         await self.bot.log(level=5, title="Channel enabled", message=f"The channel is now active", where=channel)
         if channel in self._stats_cache.keys():
             self._stats_cache[channel] = {}
 
     async def disable_channel(self, channel):
-        self.database.query("INSERT INTO channels (server, channel, enabled) VALUES (:server_id, :channel_id, 0) "
-                            "ON DUPLICATE KEY UPDATE enabled=0", server_id=channel.guild.id, channel_id=channel.id)
+        self.defensive_query(query=f"INSERT INTO channels (server, channel, enabled) VALUES ({channel.guild.id}, {channel.id}, 0) "
+                            "ON DUPLICATE KEY UPDATE enabled=0")
         self._channel_enabled_cache[channel] = False
         await self.bot.log(level=5, title="Channel disabled", message=f"The channel is now disabled", where=channel)
         if channel in self._stats_cache.keys():
             self._stats_cache[channel] = {}
 
     async def list_enabled_channels(self):
-        row = self.database.query("SELECT channel, server FROM channels WHERE enabled=1")
+        row = self.defensive_query(query="SELECT channel, server FROM channels WHERE enabled=1")
         return row.all()
 
     async def get_all_admins_ids(self):
-        row = self.database.query("SELECT DISTINCT `user_id` from admins")
+        row = self.defensive_query(query="SELECT DISTINCT `user_id` from admins")
         return [int(r.user_id) for r in row.all()]
 
     # > Stats < #
@@ -99,7 +98,7 @@ class Database:
 
         if second_sort_by in reverse_list:
             second_sort_by = f"{second_sort_by} DESC"
-        row = self.database.query(f"SELECT * FROM players WHERE channel_id=:channel_id AND (exp <> 0 OR killed_ducks > 0) ORDER BY {sorted_by}, {second_sort_by}", channel_id=channel_id)
+        row = self.defensive_query(query=f"SELECT * FROM players WHERE channel_id={channel_id} AND (exp <> 0 OR killed_ducks > 0) ORDER BY {sorted_by}, {second_sort_by}")
 
         return row.all()
 
@@ -122,12 +121,13 @@ class Database:
 
         level = await self.get_level(channel=channel, player=user)
 
-        self.database.query("INSERT INTO players (id_, channel_id, chargeurs, balles, confisque, lastGiveback, givebacks) "
-                            "VALUES (:id_, :channel_id, :chargeurs, :balles, 0, :now, 1) "
-                            "ON DUPLICATE KEY UPDATE chargeurs = :chargeurs, "
-                            "confisque = 0,lastGiveback = :now, givebacks=givebacks+1",
-
-                            id_=user.id, channel_id=channel_id, chargeurs=level["chargeurs"], balles=level["balles"], now=int(time.time()))
+        chargeurs = level["chargeurs"]
+        balles = level["balles"]
+        now = int(time.time())
+        self.defensive_query(query="INSERT INTO players (id_, channel_id, chargeurs, balles, confisque, lastGiveback, givebacks) "
+                            f"VALUES ({user.id}, {channel_id}, {chargeurs}, {balles}, 0, {now}, 1) "
+                            f"ON DUPLICATE KEY UPDATE chargeurs = {chargeurs}, "
+                            f"confisque = 0,lastGiveback = {now}, givebacks=givebacks+1")
 
         if channel in self._stats_cache.keys():
             if user in self._stats_cache[channel]:
@@ -163,13 +163,13 @@ class Database:
         while not row:
             timings.append(f"[+{round(time.time() - start_time, 2)}] Searching in DB")
             # Now that we have the ID, we can get into duckhunt/players and find the player we need
-            row = self.database.query("SELECT * FROM players WHERE channel_id=:channel_id AND id_=:user_id LIMIT 1;", stat=stat, channel_id=channel_id, user_id=user.id)
+            row = self.defensive_query(query=f"SELECT * FROM players WHERE channel_id={channel_id} AND id_={user.id} LIMIT 1;")
 
             if row.first() is None:
                 timings.append(f"[+{round(time.time() - start_time, 2)}] Not in DB, inserting")
                 # Wasn't in the DB
-                self.database.query("INSERT INTO players (id_, channel_id, name) VALUES (:user_id, :channel_id, :name_)", channel_id=channel_id, user_id=user.id,
-                                    name_=user.name + "#" + user.discriminator)
+                name_ = user.name + "#" + user.discriminator
+                self.defensive_query(query=f"INSERT INTO players (id_, channel_id, name) VALUES ({user.id}, {channel_id}, {name_})")
 
         timings.append(f"[+{round(time.time() - start_time, 2)}] Got row")
         row = row.first()
@@ -223,8 +223,19 @@ class Database:
             delta = round(now - start, 2)
             timings.append(f"[+{delta}] --> UPDATE players SET {stat} = %s, name=%s, avatar_url=%s WHERE channel_id=%s and id_=%s, ({value}, {name_}, {avatar_url}, {channel_id}, {user.id})")
 
-            q = conn._conn.execute(f"UPDATE players SET {stat} = %s, name=%s, avatar_url=%s WHERE channel_id=%s and id_=%s",
-                                     value, name_, avatar_url, channel_id, user.id)
+            attempt_ = 0
+            while (True):
+                try:
+                    attempt_ += 1
+                    q = conn._conn.execute(f"UPDATE players SET {stat} = %s, name=%s, avatar_url=%s WHERE channel_id=%s and id_=%s",
+                                        value, name_, avatar_url, channel_id, user.id)
+                    break
+                except Exception as e:
+                    if attempt_ == 3:
+                        raise e
+                    else:
+                        time.sleep(1)
+                 
             now = time.time()
             delta = round(now - start, 2)
             timings.append(f"[+{delta}] Updated row (?) rc={q.rowcount}")
@@ -233,9 +244,7 @@ class Database:
                 delta = round(now - start, 2)
                 timings.append(f"[+{delta}] --> INSERT INTO players (channel_id, id_, name, avatar_url, {stat}) VALUES (:channel_id, :user_id, :name_, :avatar_url, :stat_value), channel_id={channel_id}, user_id={user.id}, stat_value={value}, avatar_url={avatar_url}, name_={name_}")
 
-                self.database.query(f"INSERT INTO players (channel_id, id_, name, avatar_url, {stat}) VALUES (:channel_id, :user_id, :name_, :avatar_url, :stat_value)",
-                                    channel_id=channel_id, user_id=user.id, stat_value=value,
-                                    avatar_url=avatar_url, name_=name_)
+                self.defensive_query(query=f"INSERT INTO players (channel_id, id_, name, avatar_url, {stat}) VALUES ({channel_id}, {user.id}, {name_}, {avatar_url}, {value})")
                 now = time.time()
                 delta = round(now - start, 2)
                 timings.append(f"[+{delta}] Inserted new player")
@@ -308,14 +317,14 @@ class Database:
         # self.bot.logger.debug(f"> In the DB, the channel is {channel_id}")
 
         await self.bot.log(level=5, title="User stats deleted", message=f"The channel statistics of {user_id} have been deleted", where=channel)
-        self.database.query(f"DELETE FROM players WHERE channel_id=:channel_id AND id_=:user_id", channel_id=channel_id, user_id=user_id)
+        self.defensive_query(query=f"DELETE FROM players WHERE channel_id={channel_id} AND id_={user_id}")
 
     async def delete_channel_stats(self, channel):
         self.bot.logger.debug(f"Delete_channel_stats in {channel.id}")
         channel_id = await self.get_channel_dbid(channel)
         await self.bot.log(level=6, title="Channel stats deleted", message=f"The channel statistics have been reinitialised", where=channel)
 
-        self.database.query(f"DELETE FROM players WHERE channel_id=:channel_id", channel_id=channel_id)
+        self.defensive_query(query=f"DELETE FROM players WHERE channel_id={channel_id}")
 
         if channel in self._stats_cache.keys():
             self._stats_cache[channel] = {}
@@ -392,7 +401,7 @@ class Database:
 
         # TODO : Optimize to select mypref from prefs
 
-        row = self.database.query("SELECT * FROM prefs WHERE server_id=:guild_id LIMIT 1;", guild_id=guild.id)
+        row = self.defensive_query(query=f"SELECT * FROM prefs WHERE server_id={guild.id} LIMIT 1;")
 
         if row.first():
             row = row.first()
@@ -405,7 +414,7 @@ class Database:
             assert isinstance(guild, discord.Guild)
             self.bot.logger.info(f"Adding server {guild.id} ({guild.name}) to the prefs database")
             # The guild wasn't created in the DB yet.
-            self.database.query("INSERT INTO prefs (server_id) VALUES (:guild_id)", guild_id=guild.id)
+            self.defensive_query(query=f"INSERT INTO prefs (server_id) VALUES ({guild.id})")
             return await self.get_pref(channel, pref)  # Return the pref now
 
     def bool_(self, b):
@@ -433,8 +442,8 @@ class Database:
             self._settings_cache.pop(guild)
 
         try:
-            self.database.query(f"INSERT INTO prefs (server_id, {pref}) VALUES (:server_id, :value)"
-                                f"ON DUPLICATE KEY UPDATE {pref}=:value", value=value, server_id=guild.id)
+            self.defensive_query(query=f"INSERT INTO prefs (server_id, {pref}) VALUES ({guild.id}, {value})"
+                                f"ON DUPLICATE KEY UPDATE {pref}={value}")
             await self.bot.log(level=2, title="Setting changed", message=f"{pref} now set to {value}", where=guild)
 
             return True
@@ -447,7 +456,7 @@ class Database:
     async def get_admins(self, guild):
         # #self.bot.logger.debug(f"get_admins for {guild.id}")
 
-        row = self.database.query("SELECT user_id FROM admins WHERE server_id=:guild_id", guild_id=guild.id)
+        row = self.defensive_query(query=f"SELECT user_id FROM admins WHERE server_id={guild.id}")
 
         return [r.user_id for r in row.all()]
 
@@ -455,20 +464,32 @@ class Database:
         # self.bot.logger.debug(f"add_admin for {guild.id} and user {user.id}")
 
         try:
-            self.database.query("INSERT INTO admins (server_id, user_id) VALUES (:guild_id, :user_id)", guild_id=guild.id, user_id=user.id)
+            self.defensive_query(query=f"INSERT INTO admins (server_id, user_id) VALUES ({guild.id}, {user.id})")
             await self.bot.log(level=6, title="Admin added to a guild", message=f"{user.name}#{user.discriminator} is now an admin of this guild", where=guild)
             return True
         except sqlalchemy.exc.IntegrityError:  # user is admin already
             return False
 
-    async def cleanup_database(self):
-        self.database.query("INSERT INTO admins (server_id, user_id) VALUES (:guild_id, :user_id)", guild_id=guild.id, user_id=user.id)
+    async def cleanup_database(self, guild, user):
+        self.defensive_query(query=f"INSERT INTO admins (server_id, user_id) VALUES ({guild.id}, {user.id})")
 
     async def del_admin(self, guild, user):
         # self.bot.logger.debug(f"del_admin for {guild.id} and user {user.id}")
 
-        self.database.query("DELETE FROM admins WHERE server_id=:guild_id AND user_id=:user_id", guild_id=guild.id, user_id=user.id)
-
+        self.defensive_query(query=f"DELETE FROM admins WHERE server_id={guild.id} AND user_id={user.id}")
+    
+    def defensive_query(self, query, try_: int = 1):
+        try:
+            return self.database.query(query)
+        except Exception as e:
+            if try_ >= 3:
+                self.bot.logger.warning(f"Could not query database with {query} after 3 tries")
+                self.bot.logger.exception("Exception:")
+                self.bot.log(level=15, title="Error when querying database (x3)", message=f"See bot console for exception ({e})")
+                raise e
+            else:
+                time.sleep(1)
+                return self.defensive_query(query=query, try_=try_ + 1)
 
 def setup(bot):
     bot.db = Database(bot)

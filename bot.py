@@ -51,7 +51,7 @@ import discord.ext.commands as commands
 # Prepare the bot object
 
 async def get_prefix(bot, message):
-    extras = [await bot.db.get_pref(message.channel, "prefix"), "duckhunt", "dh!", "dh", "Dh", "Dh!", "dH!", "dH", "DH!", "DH"]
+    extras = [await bot.db.get_pref(message.channel, "prefix"), "dh!", "."]
     return commands.when_mentioned_or(*extras)(bot, message)
 
 
@@ -164,12 +164,6 @@ class DuckHunt(commands.AutoShardedBot):
         elif isinstance(exception, checks.NotSuperAdmin):
             await self.send_message(ctx=context, message=_(":x: You are not a super admin.", language))
             await self.hint(ctx=context, message=_("This command is reserved for the bot owners. "
-                                                   "If you think this is an error, please contact my owner at the DuckHunt Support Server (see `dh!help`).", language))
-            return
-        elif isinstance(exception, checks.NoVotesOnDBL):
-            await self.send_message(ctx=context, message=_(":x: You haven't voted for DuckHunt on DiscordBotList for a while.", language))
-            await self.hint(ctx=context, message=_("Support the bot to use this command by voting at <https://discordbots.org/bot/duckhunt>. "
-                                                   "Be aware that the votes can take a minute to be registered by Duckhunt"
                                                    "If you think this is an error, please contact my owner at the DuckHunt Support Server (see `dh!help`).", language))
             return
         elif isinstance(exception, discord.ext.commands.errors.CheckFailure):
@@ -346,8 +340,17 @@ logger.debug("Loading cogs : ")
 ###############   ####
 ##############   #####
 
-cogs = ['jishaku', 'cogs.admin_commands', 'cogs.analytics', 'cogs.experience_related_commands', 'cogs.helpers.database', 'cogs.meta', 'cogs.scores', 'cogs.setup_wizzard', 'cogs.shop', 'cogs.superadmin_commands',
-        'cogs.user_commands', 'cogs.api'  # This must be the last to run, comment if you don't need it
+cogs = ['jishaku', 
+        'cogs.admin_commands', 
+        'cogs.experience_related_commands', 
+        'cogs.helpers.database', 
+        'cogs.meta', 
+        'cogs.scores', 
+        'cogs.setup_wizzard', 
+        'cogs.shop', 
+        'cogs.superadmin_commands',
+        'cogs.user_commands', 
+        'cogs.api'
         ]
 
 for extension in cogs:

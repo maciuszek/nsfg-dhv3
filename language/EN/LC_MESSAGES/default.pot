@@ -44,14 +44,6 @@ msgstr ""
 msgid ":x: You haven't voted for DuckHunt on DiscordBotList for a while."
 msgstr ""
 
-#: bot.py:171
-msgid ""
-"Support the bot to use this command by voting at "
-"<https://discordbots.org/bot/duckhunt>. Be aware that the votes can take "
-"a minute to be registered by DuckhuntIf you think this is an error, "
-"please contact my owner at the DuckHunt Support Server (see `dh!help`)."
-msgstr ""
-
 #: bot.py:183
 msgid "You are on cooldown :(, try again in {seconds} seconds!"
 msgstr ""
@@ -130,7 +122,7 @@ msgstr ""
 
 #: cogs/admin_commands.py:266
 msgid ""
-"<:official_Duck_01_reversed:439576463436546050> Authorised to set the VIP"
+"<:Duck:> Authorised to set the VIP"
 " status!"
 msgstr ""
 
@@ -227,12 +219,10 @@ msgstr ""
 
 #: cogs/meta.py:82
 msgid ""
-"If you are a new player, read this: <https://docs.duckhunt.me/players-"
-"guide/players-quickstart>. Otherwise, here is the players command list "
-"<https://docs.duckhunt.me/players-guide/player-commands> and the admin "
-"commands <https://docs.duckhunt.me/bot-administration/admin-commands> | "
-"If you need anything, feel free to join the support server at "
-"https://discordapp.com/invite/2BksEkV"
+"If you are a new player, read this: <https://docs.duckhunt.me/players-guide/"
+"players-quickstart>. Otherwise, here is the players command list <https://"
+"docs.duckhunt.me/players-guide/player-commands> and the admin commands "
+"<https://docs.duckhunt.me/bot-administration/admin-commands>"
 msgstr ""
 
 #: cogs/meta.py:95
@@ -268,14 +258,12 @@ msgstr ""
 
 #: cogs/scores.py:49
 msgid ""
-"The scores are online at "
-"https://duckstats.api-d.com/duckstats.php?cid={channel_id}"
+"The scores are online at <not_implemented>"
 msgstr ""
 
 #: cogs/scores.py:255
 msgid ""
-"Your duckstats are waiting for you at "
-"https://duckstats.api-d.com/duckstats.php?cid={channel_id}&pid={player_id}"
+ "Your duckstats are waiting for you at <not_implemented>"
 msgstr ""
 
 #: cogs/setup_wizzard.py:24
@@ -392,8 +380,7 @@ msgid ""
 "If you are ready to continue with the setup, use the command "
 "`dh!setup_settings`. If you just want to play, use `dh!add_channel`. Once"
 " used, ducks will spawn automatically.\n"
-"Thanks for flying DucksAir. If you have any question, we are here to help"
-" at https://discord.gg/2BksEkV"
+"Thanks for flying DucksAir."
 msgstr ""
 
 #: cogs/setup_wizzard.py:135
@@ -409,8 +396,6 @@ msgid ""
 "**1/ Language used**:\n"
 "    \\* If you speak french, use `dh!settings set language fr_FR`\n"
 "    \\* If you speak spanish, use `dh!settings set language es_ES`\n"
-"    \\* Another language we don't fully support yet? Help us translate "
-"DuckHunt! Find us at https://discord.gg/2BksEkV.\n"
 "    \n"
 "**2/ Ducks Per Day**:\n"
 "    This is the number of ducks that will spawn per day. They spawn at "
@@ -1423,49 +1408,6 @@ msgstr ""
 
 #: cogs/helpers/config.py:260
 msgid "unemployed due to extinction of the duck species"
-msgstr ""
-
-#: cogs/helpers/data_store.py:182 cogs/helpers/database.py:269
-msgid "Level of {player} on #{channel}"
-msgstr ""
-
-#: cogs/helpers/data_store.py:185 cogs/helpers/database.py:272
-msgid "You leveled down!"
-msgstr ""
-
-#: cogs/helpers/data_store.py:188 cogs/helpers/database.py:275
-msgid "You leveled up!"
-msgstr ""
-
-#: cogs/helpers/data_store.py:196 cogs/helpers/database.py:283
-msgid "Current level"
-msgstr ""
-
-#: cogs/helpers/data_store.py:196 cogs/helpers/data_store.py:197
-#: cogs/helpers/database.py:283 cogs/helpers/database.py:284
-msgid "nom"
-msgstr ""
-
-#: cogs/helpers/data_store.py:197 cogs/helpers/database.py:284
-msgid "Previous level"
-msgstr ""
-
-#: cogs/helpers/data_store.py:198 cogs/helpers/database.py:285
-msgid "Shots accuracy"
-msgstr ""
-
-#: cogs/helpers/data_store.py:199 cogs/helpers/database.py:286
-msgid "Weapon reliability"
-msgstr ""
-
-#: cogs/helpers/data_store.py:200 cogs/helpers/database.py:287
-msgid "Exp points"
-msgstr ""
-
-#: cogs/helpers/data_store.py:206 cogs/helpers/database.py:293
-msgid ""
-":warning: There was an error while sending the embed, please check if the"
-" bot has the `embed_links` permission and try again!"
 msgstr ""
 
 #: cogs/helpers/ducks.py:36

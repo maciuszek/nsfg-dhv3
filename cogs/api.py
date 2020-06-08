@@ -9,7 +9,9 @@ routes = web.RouteTableDef()
 
 bot = None
 
-
+"""
+todo-nsfg probably remove this as there doesn't seem to be a pratical need
+"""
 class Api:
     """
 

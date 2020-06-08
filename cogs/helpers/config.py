@@ -7,6 +7,7 @@ from discord.ext import commands
 
 from cogs.helpers import context
 
+import os
 
 def config(bot):
     """
@@ -23,10 +24,6 @@ def config(bot):
     comments. Thanks for using DuckHunt :)
     """
 
-    # Load credentials so they can be used later
-    with open("credentials.json", "r") as f:
-        credentials = json.load(f)
-
     # That function is here to mark items as "to be translated"
     def _(string):
         return string
@@ -34,12 +31,11 @@ def config(bot):
     ## START CONFIG HERE
 
     # Change this to True once you are ready to run the bot
-    bot.configured = False
+    bot.configured = True
 
     # This is the bot token. Used by the bot to connect to discord.
-    # As this is a sensitive setting, you need to change it in credentials.json
-    bot.token = credentials["token"]
-
+    bot.token = os.getenv('BOT_TOKEN')
+    
     # > Language settings < #
 
     # This is the primary language used by the bot
@@ -91,112 +87,37 @@ def config(bot):
 
     # > Database settings < #
     # User used to connect to the Mysql DB
-    bot.database_user = "duckhunt3"
+    bot.database_user = os.getenv('MYSQL_USER')
 
     # Password for the user used to connect to the Mysql DB
-    bot.database_password = "duckhunt3"
+    bot.database_password = os.getenv('MYSQL_PASSWORD')
 
     # Name of the table used in the Mysql DB
-    bot.database_name = "DHV3"
+    bot.database_name = os.getenv('MYSQL_DB_NAME')
 
     # Name of the table used in the Mysql DB
-    bot.database_address = "localhost"
+    bot.database_address = os.getenv('MYSQL_ADDRESS')
 
     # Name of the table used in the Mysql DB
-    bot.database_port = 3306
+    bot.database_port = os.getenv('MYSQL_PORT')
 
-    # > Statistics settings < #
-    # Key to send statistics to https://bots.discord.pw/
-    # As this is a sensitive setting, you need to change it in credentials.json
-    bot.bots_discord_pw_key = credentials["bots_discord_pw_key"]
-
-    # Key to send statistics to https://discordbots.org/
-    # As this is a sensitive setting, you need to change it in credentials.json
-    bot.discordbots_org_key = credentials["discordbots_org_key"]
-
+    """
+    todo-nsfg implemented for multiple env variables
+    """
     # > User settings < #
     # This is a list of users IDs that are set as super admins on the bot. The bot will accept any command, from them,
     # regardless of the server and their permissions there
-    bot.admins = [138751484517941259, 251996890369884161]
+    bot.admins = [int(os.getenv('ADMIN_ID'))]
 
+    """
+    todo-nsfg implemented for env variables
+    """
     # This is a list of users that are blacklisted from the bot. The bot will ignore dem messages
     bot.blacklisted_users = [
-        # 2018-03-01
-        # Abused a bug in the bot to set his server to 99999999999 ducks per day, and didn't report. Lagged the bot for a few hours
-        # > Grown up since
-        # 377585801258598410,
-
-        # 2018-03-01
-        # Admin on the previous guy server
-        # > Was VIPER's fault (the previous guy, unbanning too)
-        # 293533150204657675,
-
-        # 2018-03-01
-        # Abused a bug in the bot to set his server to 99999999999 ducks per day, and didn't report. Lagged the bot for a few hours.
-        # Unrelated to the two previous guys
-        386516042882482177,
-
-        # 2018-03-01
-        # Abused a bug in the bot to set his server to 99999999999 ducks per day, and didn't report. Lagged the bot for a few hours
-        # Unrelated too
-        # > Was sorry so unbanned
-        # 330841376474267651,
-
-        # 2018-04-15
-        # Abused the unlimited number of channels to get an higer number of ducks on his 5 members guild.
-        # With 26 channels created, we have a winner.
-        # https://api-d.com/snaps/2018-04-15_23-14-13-3ggwqd57mj.png
-        # > 2019-02-01 : Unbanned
-        # 331466244131782661,
-
-        # 2018-04-15
-        # Abused the unlimited number of channels to get an higer number of ducks on his 1 member guild.
-        # [20]Tunbridge Wells PoGo Raid (342562516850704385) : Owned by 339294911935414272 with 5 members
-        # 20 channels total, owner of the server
-        339294911935414272,
-
-        # 2018-10-28
-        # For the following members, they are all banned because they were part of a "Nazi" server
-        # Nicknamed the bot as Jew-Hunt, bad server all in all tbh, toxic people we just shouldn't have on discord.
-        194538610278531072,
-        438065378225029120,
-        287570926961426433,
-        397078847880691712,
-        253289917151445003,
-        473799598599700484,
-        228148908281298945,
-        351717657583812609,
-        143790475449466880,
-        329606284871729173,
-        246331155396165632,
-        233626052830822400,
-        369500736968720386,
-        251036600648073216,
-        475789560123490307,
-        365965970566807564,
-        307944507696087051,
-
-        # 2019-01-27
-        # Asked to be removed from the web interface
-        # Applying a global ban so they doesn't get re-added anywhere
-        # May be removed on demand
-        441035268775215106,
-
-        # 2020-01-02
-        # Spamming the !help command a ton of times
-        # Probably to try to lag bots
-        234344797412786176,
-        427945413669158912,
-
-        # 2020-01-08
-        # Spaming the !say command to make the bot say insluts and mass pings
-        505412708234035201,
-
-        # All for now
     ]
 
     # Bot Log Channel
-    bot.log_channel_id = 432934518479912960
+    bot.log_channel_id = int(os.getenv('LOG_CHANNEL_ID'))
 
     # > Events Settings < #
     bot.event_list = [

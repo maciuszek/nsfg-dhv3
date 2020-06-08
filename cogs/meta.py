@@ -80,8 +80,7 @@ class Meta(commands.Cog):
         _ = self.bot._;
         language = await self.bot.db.get_pref(ctx.channel, "language")
         await self.bot.send_message(ctx=ctx, message=_(
-            "If you are a new player, read this: <https://docs.duckhunt.me/players-guide/players-quickstart>. Otherwise, here is the players command list <https://docs.duckhunt.me/players-guide/player-commands> and the admin commands <https://docs.duckhunt.me/bot-administration/admin-commands> | If you need anything, feel free to join the "
-            "support server at https://discordapp.com/invite/2BksEkV", language))
+            "If you are a new player, read this: <https://docs.duckhunt.me/players-guide/players-quickstart>. Otherwise, here is the players command list <https://docs.duckhunt.me/players-guide/player-commands> and the admin commands <https://docs.duckhunt.me/bot-administration/admin-commands>", language))
 
     @commands.command(aliases=["date"])
     async def time(self, ctx):

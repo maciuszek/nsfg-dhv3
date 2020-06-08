@@ -264,7 +264,7 @@ class Admin(commands.Cog):
             elif pref == "vip":
                 if ctx.message.author.id in self.bot.admins:
                     await self.bot.send_message(ctx=ctx, message=_(
-                        "<:official_Duck_01_reversed:439576463436546050> Authorised to set the VIP status!", language))
+                        "<:Duck:> Authorised to set the VIP status!", language))
                 else:
                     await self.bot.send_message(ctx=ctx, message=_(
                         ":x: Unauthorised to set the VIP status! You are not an owner.", language))

@@ -46,14 +46,6 @@ class Scores(commands.Cog):
         _ = self.bot._
         language = await self.bot.db.get_pref(ctx.channel, "language")
 
-        await self.bot.send_message(ctx=ctx, message=_(
-            "The scores are online at https://duckstats.api-d.com/duckstats.php?cid={channel_id}", language).format(
-            channel_id=channel.id))
-        # await self.bot.hint(ctx=ctx, message="The following will disappear in a few days. If you notice a bug, please report it on the DuckHunt server : <https://discord.gg/G4skWae>. Thanks! ")
-
-        # Old version of the command
-        """
-
         args = args.split()
         parser = argparse.ArgumentParser(description='Parse the top command.')
         # parser.add_argument('--show', dest='count', type=int, default=10)
@@ -93,152 +85,142 @@ class Scores(commands.Cog):
         sorting_field = available_stats[args.sort_by]
         additional_field = available_stats['exp' if sorting_field['key'] is not 'exp' else 'killed']
 
-        if not permissions.read_messages \
-                or not permissions.manage_messages \
-                or not permissions.embed_links \
-                or not permissions.read_message_history:
+        # \N{BLACK RIGHT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR} is >>|
+        # \N{BLACK LEFT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR} is |<<
 
-            await self.bot.send_message(ctx=ctx, message=_("Can't post embeds!", language))
-            await self.bot.hint(ctx, _("Use `dh!setup` to see missing permissions and ask an admin to give me the missing ones!", language))
+        reaction = True
+        changed = True
 
+        first_page_emo = "\N{BLACK LEFT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR}"
+        prev_emo = "\N{BLACK LEFT-POINTING TRIANGLE}"
+        next_emo = "\N{BLACK RIGHT-POINTING TRIANGLE}"
+        last_page_emo = "\N{BLACK RIGHT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR}"
 
-            return
+        topscores = await self.bot.db.top_scores(channel=channel, sorted_by=sorting_field['key'], second_sort_by=additional_field['key'])
 
-        else:
-            # \N{BLACK RIGHT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR} is >>|
-            # \N{BLACK LEFT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR} is |<<
+        reaction_list = []
+        if len(topscores) > 10:
+            reaction_list = [next_emo, last_page_emo]
 
-            reaction = True
-            changed = True
+        current_page = 1
 
-            first_page_emo = "\N{BLACK LEFT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR}"
-            prev_emo = "\N{BLACK LEFT-POINTING TRIANGLE}"
-            next_emo = "\N{BLACK RIGHT-POINTING TRIANGLE}"
-            last_page_emo = "\N{BLACK RIGHT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR}"
+        message = await self.bot.send_message(ctx=ctx, message=_("Generating top scores for your channel, please wait!", language), force_pm=await self.bot.db.get_pref(ctx.guild, "pm_stats"),
+                                                return_message=True)
 
-            topscores = await self.bot.db.top_scores(channel=channel, sorted_by=sorting_field['key'], second_sort_by=additional_field['key'])
+        while reaction:
+            if changed:
+                # channel:discord.TextChannel
+                i = current_page * 10 - 10
 
-            reaction_list = []
-            if len(topscores) > 10:
-                reaction_list = [next_emo, last_page_emo]
+                scores_to_process = topscores[i:i + 10]
 
-            current_page = 1
+                if scores_to_process:
+                    embed = discord.Embed(description="Page #{i}".format(i=current_page))
+                    embed.title = _(":cocktail: Best scores for {channel_name} :cocktail:", language).format(**{
+                        "channel_name": channel.name,
+                    })
 
-            message = await self.bot.send_message(ctx=ctx, message=_("Generating top scores for your channel, please wait!", language), force_pm=await self.bot.db.get_pref(ctx.guild, "pm_stats"),
-                                                  return_message=True)
+                    embed.colour = discord.Colour.green()
+                    # embed.timestamp = datetime.now(timezone.utc)
+                    embed.url = 'https://duckhunt.me/'  # TODO: get the webinterface url and add it here inplace
 
-            while reaction:
-                if changed:
-                    # channel:discord.TextChannel
-                    i = current_page * 10 - 10
+                    players_list = ""
+                    first_stat_list = ""
+                    additional_stat_list = ""
 
-                    scores_to_process = topscores[i:i + 10]
+                    for joueur in scores_to_process:
 
-                    if scores_to_process:
-                        embed = discord.Embed(description="Page #{i}".format(i=current_page))
-                        embed.title = _(":cocktail: Best scores for {channel_name} :cocktail:", language).format(**{
-                            "channel_name": channel.name,
-                        })
+                        joueur = dict(joueur)
+                        i += 1
 
-                        embed.colour = discord.Colour.green()
-                        # embed.timestamp = datetime.now(timezone.utc)
-                        embed.url = 'https://duckhunt.me/'  # TODO: get the webinterface url and add it here inplace
+                        if (not "killed_ducks" in joueur) or (not joueur["killed_ducks"]):
+                            joueur["killed_ducks"] = _("None!", language)
 
-                        players_list = ""
-                        first_stat_list = ""
-                        additional_stat_list = ""
+                        if sorting_field['key'] is 'best_time':
+                            best_time = round(joueur.get('best_time', None) or 0, 3)
+                            joueur['best_time'] = int(best_time) if int(best_time) == float(best_time) else float(best_time)
 
-                        for joueur in scores_to_process:
+                        if (not "best_time" in joueur) or (not joueur["best_time"]):
+                            joueur["best_time"] = _('None!', language)
 
-                            joueur = dict(joueur)
-                            i += 1
+                        member = ctx.message.guild.get_member(joueur["id_"])
 
-                            if (not "killed_ducks" in joueur) or (not joueur["killed_ducks"]):
-                                joueur["killed_ducks"] = _("None!", language)
+                        player_name = joueur['name'] if len(joueur['name']) <= 10 else joueur['name'][:9] + '…'
+                        player_name = member.name if member else player_name
+                        if await self.bot.db.get_pref(ctx.guild, "mention_in_topscores"):
+                            # mention = mention if len(mention) < 20 else joueur["name"]
+                            mention = member.mention if member else player_name
+                        else:
+                            mention = player_name
 
-                            if sorting_field['key'] is 'best_time':
-                                best_time = round(joueur.get('best_time', None) or 0, 3)
-                                joueur['best_time'] = int(best_time) if int(best_time) == float(best_time) else float(best_time)
+                        players_list += "#{i} {name}".format(name=mention, i=i) + "\n\n"
+                        first_stat_list += str(joueur.get(sorting_field['key'], None) or 0) + "\n\n"
+                        additional_stat_list += str(joueur.get(additional_field['key'], None) or 0) + "\n\n"
 
-                            if (not "best_time" in joueur) or (not joueur["best_time"]):
-                                joueur["best_time"] = _('None!', language)
-
-                            member = ctx.message.guild.get_member(joueur["id_"])
-
-                            player_name = joueur['name'] if len(joueur['name']) <= 10 else joueur['name'][:9] + '…'
-                            player_name = member.name if member else player_name
-                            if await self.bot.db.get_pref(ctx.guild, "mention_in_topscores"):
-                                # mention = mention if len(mention) < 20 else joueur["name"]
-                                mention = member.mention if member else player_name
-                            else:
-                                mention = player_name
-
-                            players_list += "#{i} {name}".format(name=mention, i=i) + "\n\n"
-                            first_stat_list += str(joueur.get(sorting_field['key'], None) or 0) + "\n\n"
-                            additional_stat_list += str(joueur.get(additional_field['key'], None) or 0) + "\n\n"
-
-                        embed.add_field(name=_("Player", language), value=players_list, inline=True)
-                        embed.add_field(name=sorting_field['name'], value=first_stat_list, inline=True)
-                        embed.add_field(name=additional_field['name'], value=additional_stat_list, inline=True)
-
-                        try:
-                            await message.edit(content="<:official_Duck_01:439546719177539584>", embed=embed)
-                        except discord.errors.Forbidden:
-                            await self.bot.send_message(ctx=ctx, message=_(":warning: There was an error while sending the embed, "
-                                                                           "please check if the bot has the `embed_links` permission and try again!", language))
-
-                        for emo in reaction_list:
-                            await message.add_reaction(emo)
-
-                        changed = False
-
-                if reaction_list:
-                    def check(reaction, user):
-                        cond = reaction.message.id == message.id
-                        cond = cond and user == ctx.message.author
-                        cond = cond and str(reaction.emoji) in reaction_list
-                        return cond
+                    embed.add_field(name=_("Player", language), value=players_list, inline=True)
+                    embed.add_field(name=sorting_field['name'], value=first_stat_list, inline=True)
+                    embed.add_field(name=additional_field['name'], value=additional_stat_list, inline=True)
 
                     try:
-                        res = await self.bot.wait_for('reaction_add', check=check, timeout=1200)
-                    except:
-                        res = None
+                        await message.edit(content="<:official_Duck_01:439546719177539584>", embed=embed)
+                    except discord.errors.Forbidden:
+                        await self.bot.send_message(ctx=ctx, message=_(":warning: There was an error while sending the embed, "
+                                                                        "please check if the bot has the `embed_links` permission and try again!", language))
+
+                    for emo in reaction_list:
+                        await message.add_reaction(emo)
+
+                    changed = False
+
+            if reaction_list:
+                def check(reaction, user):
+                    cond = reaction.message.id == message.id
+                    cond = cond and user == ctx.message.author
+                    cond = cond and str(reaction.emoji) in reaction_list
+                    return cond
+
+                try:
+                    res = await self.bot.wait_for('reaction_add', check=check, timeout=1200)
+                except:
+                    res = None
+                    pass
+
+                if res:
+                    reaction, user = res
+                    emoji = reaction.emoji
+                    reaction_list = []
+                    changed = True
+
+                    if emoji == first_page_emo:
+                        current_page = 1
+                        reaction_list.extend([next_emo, last_page_emo])
+                    elif emoji == prev_emo:
+                        current_page -= 1
+                        if ((current_page * 10) - 10) > 0:
+                            reaction_list.extend([first_page_emo, prev_emo])
+                        reaction_list.extend([next_emo, last_page_emo])
+                    elif emoji == next_emo:
+                        current_page += 1
+                        reaction_list.extend([first_page_emo, prev_emo])
+                        if len(topscores) > current_page * 10:
+                            reaction_list.extend([next_emo, last_page_emo])
+                    elif emoji == last_page_emo:
+                        current_page = math.ceil(len(topscores) / 10)
+                        reaction_list.extend([first_page_emo, prev_emo])
+
+                    try:
+                        await message.clear_reactions()
+                    except discord.errors.Forbidden:
+                        #await self.bot.send_message(ctx=ctx, message=_("I don't have the `manage_messages` permission, I can't remove reactions. Please tell an admin. ;)", language))
                         pass
-
-                    if res:
-                        reaction, user = res
-                        emoji = reaction.emoji
-                        reaction_list = []
-                        changed = True
-
-                        if emoji == first_page_emo:
-                            current_page = 1
-                            reaction_list.extend([next_emo, last_page_emo])
-                        elif emoji == prev_emo:
-                            current_page -= 1
-                            if ((current_page * 10) - 10) > 0:
-                                reaction_list.extend([first_page_emo, prev_emo])
-                            reaction_list.extend([next_emo, last_page_emo])
-                        elif emoji == next_emo:
-                            current_page += 1
-                            reaction_list.extend([first_page_emo, prev_emo])
-                            if len(topscores) > current_page * 10:
-                                reaction_list.extend([next_emo, last_page_emo])
-                        elif emoji == last_page_emo:
-                            current_page = math.ceil(len(topscores) / 10)
-                            reaction_list.extend([first_page_emo, prev_emo])
-
-                        try:
-                            await message.clear_reactions()
-                        except discord.errors.Forbidden:
-                            #await self.bot.send_message(ctx=ctx, message=_("I don't have the `manage_messages` permission, I can't remove reactions. Please tell an admin. ;)", language))
-                            pass
-                    else:
-                        reaction = False
                 else:
                     reaction = False
-"""
+            else:
+                reaction = False
 
+    """
+    todo-nsfg fix or remove this and related references
+    """
     @commands.command(aliases=["stats", "duck_stats"])
     @checks.is_channel_enabled()
     @commands.cooldown(2, 60, BucketType.user)
@@ -251,15 +233,6 @@ class Scores(commands.Cog):
 
         if not target:
             target = ctx.message.author
-
-        await self.bot.send_message(ctx=ctx, message=_(
-            "Your duckstats are waiting for you at https://duckstats.api-d.com/duckstats.php?cid={channel_id}&pid={player_id}",
-            language).format(
-            channel_id=ctx.channel.id, player_id=target.id))
-        # await self.bot.hint(ctx=ctx, message="The following will disappear in a few days. If you notice a bug, please report it on the DuckHunt server : <https://discord.gg/G4skWae>. Thanks! ")
-
-        # Old version of the command
-        """
 
         gs = Get_Stats(self.bot, channel, target)
 
@@ -438,8 +411,6 @@ class Scores(commands.Cog):
                     ctx.logger.exception("Can't delete message")
                     pass
                 return
-"""
-
 
 def setup(bot):
     bot.add_cog(Scores(bot))
