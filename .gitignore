@@ -1,4 +1,3 @@
-deploy_heroku.sh
 nsfg-dhv3.code-workspace
 *.log
 *.pyc
