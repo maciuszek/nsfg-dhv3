@@ -13,6 +13,7 @@ Note: I won't be providing any opions or suggestions regarding hosting the bot
 
 ENVVAR | REQUIRED
 ------------- | -------------
+BOT_TOKEN | Y
 MYSQL_USER | Y
 MYSQL_PASSWORD | Y
 MYSQL_DB_NAME | Y
