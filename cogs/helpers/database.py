@@ -47,7 +47,7 @@ class Database:
                 self._channel_dbid_cache[channel] = id_
 
                 if channel.name != row.first().channel_name:
-                    self.defensive_query(query=f"UPDATE channels SET channel_name = {channel.name} WHERE id={id_}")
+                    self.defensive_query(query=f"UPDATE channels SET channel_name = '{channel.name}' WHERE id={id_}")
                 return id_
             else:
                 return None
@@ -169,7 +169,7 @@ class Database:
                 timings.append(f"[+{round(time.time() - start_time, 2)}] Not in DB, inserting")
                 # Wasn't in the DB
                 name_ = user.name + "#" + user.discriminator
-                self.defensive_query(query=f"INSERT INTO players (id_, channel_id, name) VALUES ({user.id}, {channel_id}, {name_})")
+                self.defensive_query(query=f"INSERT INTO players (id_, channel_id, name) VALUES ({user.id}, {channel_id}, '{name_}')")
 
         timings.append(f"[+{round(time.time() - start_time, 2)}] Got row")
         row = row.first()
@@ -244,7 +244,10 @@ class Database:
                 delta = round(now - start, 2)
                 timings.append(f"[+{delta}] --> INSERT INTO players (channel_id, id_, name, avatar_url, {stat}) VALUES (:channel_id, :user_id, :name_, :avatar_url, :stat_value), channel_id={channel_id}, user_id={user.id}, stat_value={value}, avatar_url={avatar_url}, name_={name_}")
 
-                self.defensive_query(query=f"INSERT INTO players (channel_id, id_, name, avatar_url, {stat}) VALUES ({channel_id}, {user.id}, {name_}, {avatar_url}, {value})")
+                """
+                todo-nsfg fix; {stat} will have issues if any stat is varchar
+                """
+                self.defensive_query(query=f"INSERT INTO players (channel_id, id_, name, avatar_url, {stat}) VALUES ({channel_id}, {user.id}, '{name_}', '{avatar_url}', {value})")
                 now = time.time()
                 delta = round(now - start, 2)
                 timings.append(f"[+{delta}] Inserted new player")
@@ -442,6 +445,9 @@ class Database:
             self._settings_cache.pop(guild)
 
         try:
+            """
+            todo-nsfg fix; {pref} will have issues if any pref is varchar
+            """
             self.defensive_query(query=f"INSERT INTO prefs (server_id, {pref}) VALUES ({guild.id}, {value})"
                                 f"ON DUPLICATE KEY UPDATE {pref}={value}")
             await self.bot.log(level=2, title="Setting changed", message=f"{pref} now set to {value}", where=guild)
