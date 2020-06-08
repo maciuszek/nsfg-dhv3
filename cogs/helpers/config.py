@@ -102,7 +102,7 @@ def config(bot):
     bot.database_port = os.getenv('MYSQL_PORT')
 
     """
-    todo-nsfg implemented for multiple env variables
+    todo-nsfg redo implementation to use scalar
     """
     # > User settings < #
     # This is a list of users IDs that are set as super admins on the bot. The bot will accept any command, from them,
