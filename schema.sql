@@ -1,5 +1,3 @@
-SET DB_NAME = "insert your database name";
-
 -- phpMyAdmin SQL Dump
 -- version 4.5.4.1deb2ubuntu2
 -- http://www.phpmyadmin.net
@@ -17,7 +15,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
-USE DB_NAME;
+USE YOUR_DATABASE;
 
 --
 -- Base de données :  `DHV3`
