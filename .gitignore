@@ -1,3 +1,5 @@
 nsfg-dhv3.code-workspace
 *.log
 *.pyc
+
+env.sh

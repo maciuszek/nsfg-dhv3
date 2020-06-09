@@ -102,7 +102,9 @@ class Grease(BushObject):
         await bot.db.set_stat(ctx.message.channel, ctx.message.author, "graisse", time.time() + DAY)
         return True
 
-
+"""
+todo-nsfg test if this is working
+"""
 class Silencer(BushObject):
     name = _('a full-featured silencer')
     db = 'found_silencers'
