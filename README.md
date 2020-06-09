@@ -1,7 +1,6 @@
 # NSFG-DHV3
 
-NSFG-DHV3 is a fork of https://github.com/DuckHunt-discord/DHV3, providing is a lighter and more agnostic
-implementation.
+NSFG-DHV3 is a fork of https://github.com/DuckHunt-discord/DHV3, providing a lighter and server agnostic implementation
 
 ## Installation
 
@@ -11,7 +10,7 @@ Note: I won't be providing any opions or suggestions regarding hosting the bot
 
 ### Configuration
 
-ENVVAR | REQUIRED
+ENVIRONMENT VARIABLE | REQUIRED
 ------------- | -------------
 BOT_TOKEN | Y
 MYSQL_USER | Y
