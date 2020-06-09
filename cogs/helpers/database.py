@@ -479,7 +479,7 @@ class Database:
 
         self.defensive_query(query="DELETE FROM admins WHERE server_id=%s AND user_id=%s", args=(guild.id, user.id))
     
-    def defensive_query(self, query, args, try_: int = 1):
+    def defensive_query(self, query, args: str = "", try_: int = 1):
         try:
             return self.database.query(query, False, args)
         except Exception as e:
