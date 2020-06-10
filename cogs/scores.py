@@ -162,7 +162,7 @@ class Scores(commands.Cog):
                     embed.add_field(name=additional_field['name'], value=additional_stat_list, inline=True)
 
                     try:
-                        await message.edit(content="Top Scores Report", embed=embed)
+                        await message.edit(content="Report Generated", embed=embed)
                     except discord.errors.Forbidden:
                         await self.bot.send_message(ctx=ctx, message=_(":warning: There was an error while sending the embed, "
                                                                         "please check if the bot has the `embed_links` permission and try again!", language))
@@ -343,7 +343,7 @@ class Scores(commands.Cog):
 
                 try:
                     #ctx.logger.debug("Duckstats : " + str(embed.to_dict()))
-                    await duckstats_message.edit(content="Statics Report", embed=embed)
+                    await duckstats_message.edit(content="Report Generated", embed=embed)
                     #await self.bot.send_message(ctx=ctx, embed=embed)
                 except:
                     ctx.logger.exception("Error sending embed, with embed " + str(embed.to_dict()))
