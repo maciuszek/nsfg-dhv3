@@ -95,8 +95,9 @@ class Database:
         channel_id = await self.get_channel_dbid(channel)
         sorted_by = f"{sorted_by} DESC"
 
-        row = self.defensive_query(0, "SELECT * FROM players WHERE channel_id=:channel_id AND (exp <> 0 OR killed_ducks > 0) ORDER BY :sorted_by", 
-        channel_id=channel_id, sorted_by=sorted_by)
+        row = self.defensive_query(0, 
+        f"SELECT * FROM players WHERE channel_id=:channel_id AND (exp <> 0 OR killed_ducks > 0) ORDER BY {sorted_by}", 
+        channel_id=channel_id)
 
         return row.all()
 
