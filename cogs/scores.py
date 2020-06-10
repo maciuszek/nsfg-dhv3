@@ -122,7 +122,6 @@ class Scores(commands.Cog):
 
                     embed.colour = discord.Colour.green()
                     # embed.timestamp = datetime.now(timezone.utc)
-                    embed.url = 'https://duckhunt.me/'  # TODO: get the webinterface url and add it here inplace
 
                     players_list = ""
                     first_stat_list = ""
@@ -259,9 +258,7 @@ class Scores(commands.Cog):
 
                 embed.set_author(name=str(target), icon_url=target.avatar_url)
                 embed.set_thumbnail(url=target.avatar_url if target.avatar_url else self.bot.user.avatar_url)
-                embed.url = 'https://duckhunt.me/'
                 embed.colour = discord.Colour.green()
-                embed.set_footer(text='DuckHunt V3', icon_url='http://api-d.com/snaps/2016-11-19_10-38-54-q1smxz4xyq.jpg')
 
                 if current_page == 1:
                     embed.title = _("General statistics", language)
