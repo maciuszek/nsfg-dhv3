@@ -91,16 +91,12 @@ class Database:
 
     # > Stats < #
 
-    async def top_scores(self, channel, sorted_by, second_sort_by):
+    async def top_scores(self, channel, sorted_by):
         channel_id = await self.get_channel_dbid(channel)
-        reverse_list = ["exp", "killed_ducks"]
-        if sorted_by in reverse_list:
-            sorted_by = f"{sorted_by} DESC"
+        sorted_by = f"{sorted_by} DESC"
 
-        if second_sort_by in reverse_list:
-            second_sort_by = f"{second_sort_by} DESC"
-        row = self.defensive_query(0, "SELECT * FROM players WHERE channel_id=:channel_id AND (exp <> 0 OR killed_ducks > 0) ORDER BY :sorted_by, :second_sort_by", 
-        channel_id=channel_id, sorted_by=sorted_by, second_sort_by=second_sort_by)
+        row = self.defensive_query(0, "SELECT * FROM players WHERE channel_id=:channel_id AND (exp <> 0 OR killed_ducks > 0) ORDER BY :sorted_by", 
+        channel_id=channel_id, sorted_by=sorted_by)
 
         return row.all()
 

@@ -81,7 +81,9 @@ class Scores(commands.Cog):
             }
         }
 
-
+        """
+        todo-nsfg make it report all stats not just one extra ontop of sort-by
+        """
         sorting_field = available_stats[args.sort_by]
         additional_field = available_stats['exp' if sorting_field['key'] is not 'exp' else 'killed']
 
@@ -96,7 +98,7 @@ class Scores(commands.Cog):
         next_emo = "\N{BLACK RIGHT-POINTING TRIANGLE}"
         last_page_emo = "\N{BLACK RIGHT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR}"
 
-        topscores = await self.bot.db.top_scores(channel=channel, sorted_by=sorting_field['key'], second_sort_by=additional_field['key'])
+        topscores = await self.bot.db.top_scores(channel=channel, sorted_by=sorting_field['key'])
 
         reaction_list = []
         if len(topscores) > 10:
