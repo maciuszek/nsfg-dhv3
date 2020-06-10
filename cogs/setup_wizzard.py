@@ -156,7 +156,7 @@ I'll give you the most used parameters, and let you change them if you want. Any
     This is starting to be lengthy, so I won't go into further details here. You are probably all set and can start the game by typing `dh!add_channel`.
     More settings can be found using `dh!settings list`
     
-Thanks for playing with me! <:official_Duck_01:439546719177539584>
+Thanks for playing with me!
 """, language))
 
 

@@ -138,10 +138,10 @@ msgstr ""
 
 #: cogs/admin_commands.py:226
 msgid ""
-"<:Duck:> Authorised to set the VIP "
+"Authorised to set the VIP "
 "status!"
 msgstr ""
-"<:Duck:> Authorised to set the VIP "
+"Authorised to set the VIP "
 "status!"
 
 #: cogs/admin_commands.py:228
@@ -512,7 +512,7 @@ msgid ""
 "You are probably all set and can start the game by typing `dh!add_channel`.\n"
 "    More settings can be found using `dh!settings list`\n"
 "    \n"
-"Thanks for playing with me! <:official_Duck_01:439546719177539584>\n"
+"Thanks for playing with me!\n"
 msgstr ""
 "Hey! Let's configure the server!\n"
 "I'll give you the most used parameters, and let you change them if you want. "
@@ -548,7 +548,7 @@ msgstr ""
 "You are probably all set and can start the game by typing `dh!add_channel`.\n"
 "    More settings can be found using `dh!settings list`\n"
 "    \n"
-"Thanks for playing with me! <:official_Duck_01:439546719177539584>\n"
+"Thanks for playing with me!\n"
 
 #: cogs/shop.py:42
 msgid ""

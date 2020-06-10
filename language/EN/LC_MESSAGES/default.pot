@@ -122,7 +122,7 @@ msgstr ""
 
 #: cogs/admin_commands.py:266
 msgid ""
-"<:Duck:> Authorised to set the VIP"
+"Authorised to set the VIP"
 " status!"
 msgstr ""
 
@@ -422,7 +422,7 @@ msgid ""
 "`dh!add_channel`.\n"
 "    More settings can be found using `dh!settings list`\n"
 "    \n"
-"Thanks for playing with me! <:official_Duck_01:439546719177539584>\n"
+"Thanks for playing with me!\n"
 msgstr ""
 
 #: cogs/shop.py:42

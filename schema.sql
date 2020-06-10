@@ -140,7 +140,7 @@ CREATE TABLE `prefs` (
   `disable_decoys_when_ducks_are_sleeping` tinyint(1) UNSIGNED DEFAULT '1',
   `duck_frighten_chance` tinyint(11) UNSIGNED DEFAULT '5',
   `ducks_per_day` smallint(4) UNSIGNED DEFAULT '48',
-  `emoji_used` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT '<:Duck:>',
+  `emoji_used` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT '',
   `exp_won_per_duck_killed` tinyint(11) UNSIGNED DEFAULT '10',
   `killed_mentions` tinyint(1) UNSIGNED DEFAULT '1',
   `language` char(5) COLLATE utf8mb4_unicode_ci DEFAULT 'en_EN',
