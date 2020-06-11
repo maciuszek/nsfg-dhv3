@@ -81,11 +81,7 @@ class Scores(commands.Cog):
             }
         }
 
-        """
-        todo-nsfg make it report all stats not just one extra ontop of sort-by
-        """
         sorting_field = available_stats[args.sort_by]
-        additional_field = available_stats['exp' if sorting_field['key'] is not 'exp' else 'killed']
 
         # \N{BLACK RIGHT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR} is >>|
         # \N{BLACK LEFT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR} is |<<
@@ -118,7 +114,7 @@ class Scores(commands.Cog):
 
                 if scores_to_process:
                     embed = discord.Embed(description="Page #{i}".format(i=current_page))
-                    embed.title = _(":cocktail: Best scores for {channel_name} :cocktail:", language).format(**{
+                    embed.title = _("Best scores for {channel_name}", language).format(**{
                         "channel_name": channel.name,
                     })
 
@@ -126,20 +122,21 @@ class Scores(commands.Cog):
                     # embed.timestamp = datetime.now(timezone.utc)
 
                     players_list = ""
-                    first_stat_list = ""
-                    additional_stat_list = ""
+                    exp_stat_list = ""
+                    killed_stat_list = ""
+                    missed_stat_list = ""
+                    time_stat_list = ""
 
                     for joueur in scores_to_process:
+                        i += 1
 
                         joueur = dict(joueur)
-                        i += 1
+
+                        best_time = round(joueur.get('best_time', None) or 0, 3)
+                        joueur['best_time'] = int(best_time) if int(best_time) == float(best_time) else float(best_time)
 
                         if (not "killed_ducks" in joueur) or (not joueur["killed_ducks"]):
                             joueur["killed_ducks"] = _("None!", language)
-
-                        if sorting_field['key'] is 'best_time':
-                            best_time = round(joueur.get('best_time', None) or 0, 3)
-                            joueur['best_time'] = int(best_time) if int(best_time) == float(best_time) else float(best_time)
 
                         if (not "best_time" in joueur) or (not joueur["best_time"]):
                             joueur["best_time"] = _('None!', language)
@@ -155,15 +152,20 @@ class Scores(commands.Cog):
                             mention = player_name
 
                         players_list += "#{i} {name}".format(name=mention, i=i) + "\n\n"
-                        first_stat_list += str(joueur.get(sorting_field['key'], None) or 0) + "\n\n"
-                        additional_stat_list += str(joueur.get(additional_field['key'], None) or 0) + "\n\n"
+                        exp_stat_list += str(joueur.get(available_stats['exp']['key'], None) or 0) + "\n\n"
+                        killed_stat_list += str(joueur.get(available_stats['killed']['key'], None) or 0) + "\n\n"
+                        missed_stat_list += str(joueur.get(available_stats['missed']['key'], None) or 0) + "\n\n"
+                        time_stat_list += str(joueur.get(available_stats['time']['key'], None) or 0) + "\n\n"
 
                     embed.add_field(name=_("Player", language), value=players_list, inline=True)
-                    embed.add_field(name=sorting_field['name'], value=first_stat_list, inline=True)
-                    embed.add_field(name=additional_field['name'], value=additional_stat_list, inline=True)
+                    embed.add_field(name=available_stats['exp']['name'], value=exp_stat_list, inline=True)
+                    embed.add_field(name=available_stats['killed']['name'], value=killed_stat_list, inline=True)
+                    embed.add_field(name=_("Player", language), value=players_list, inline=True)
+                    embed.add_field(name=available_stats['missed']['name'], value=missed_stat_list, inline=True)
+                    embed.add_field(name=available_stats['time']['name'], value=time_stat_list, inline=True)
 
                     try:
-                        await message.edit(content="Report Generated", embed=embed)
+                        await message.edit(embed=embed)
                     except discord.errors.Forbidden:
                         await self.bot.send_message(ctx=ctx, message=_(":warning: There was an error while sending the embed, "
                                                                         "please check if the bot has the `embed_links` permission and try again!", language))
@@ -342,7 +344,7 @@ class Scores(commands.Cog):
 
                 try:
                     #ctx.logger.debug("Duckstats : " + str(embed.to_dict()))
-                    await duckstats_message.edit(content="Report Generated", embed=embed)
+                    await duckstats_message.edit(embed=embed)
                     #await self.bot.send_message(ctx=ctx, embed=embed)
                 except:
                     ctx.logger.exception("Error sending embed, with embed " + str(embed.to_dict()))
