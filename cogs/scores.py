@@ -102,7 +102,7 @@ class Scores(commands.Cog):
 
         current_page = 1
 
-        message = await self.bot.send_message(ctx=ctx, message=_("Generating top scores for your channel, please wait!", language), force_pm=await self.bot.db.get_pref(ctx.guild, "pm_stats"),
+        message = await self.bot.send_message(ctx=ctx, message=_("Generating top scores for your channel, please wait...", language), force_pm=await self.bot.db.get_pref(ctx.guild, "pm_stats"),
                                                 return_message=True)
 
         while reaction:
@@ -248,7 +248,7 @@ class Scores(commands.Cog):
         total_page = 4
 
         duckstats_message = await self.bot.send_message(ctx=ctx, force_pm=await self.bot.db.get_pref(ctx.guild, "pm_stats"),
-                                                        message=_("Generating DuckHunt statistics for you, please wait...", language), return_message=True)
+                                                        message=_("Generating statistics for you, please wait...", language), return_message=True)
         await duckstats_message.add_reaction(first_page_emo)
         await duckstats_message.add_reaction(prev_emo)
         await duckstats_message.add_reaction(next_emo)
