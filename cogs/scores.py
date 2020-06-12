@@ -50,16 +50,14 @@ class Scores(commands.Cog):
         parser = argparse.ArgumentParser(description='Parse the top command.')
         # parser.add_argument('--show', dest='count', type=int, default=10)
 
-        parser.add_argument('--sort-by', dest='sort_by', type=str, default="exp", choices=["exp", "killed", "missed", "time"])
+        parser.add_argument('--sort-by', dest='sort_by', type=str, default="exp", choices=["exp", "killed"])
 
         try:
             args = parser.parse_args(args)
         except SystemExit:
-            await self.bot.hint(ctx=ctx, message=_("You have to use `--sort-by [exp/killed/missed/time]` here.", language))
+            await self.bot.hint(ctx=ctx, message=_("You have to use `--sort-by [exp/killed]` here.", language))
             return
-
-
-
+        
         permissions = channel.permissions_for(message.guild.me)
 
         available_stats = {
@@ -70,14 +68,6 @@ class Scores(commands.Cog):
             'killed': {
                 'name': _('Ducks killed', language),
                 'key' : 'killed_ducks'
-            },
-            'missed': {
-                'name': _('Shots missed', language),
-                'key' : 'shoots_missed'
-            },
-            'time': {
-                'name': _('Best time', language),
-                'key': 'best_time',
             }
         }
 
@@ -124,22 +114,14 @@ class Scores(commands.Cog):
                     players_list = ""
                     exp_stat_list = ""
                     killed_stat_list = ""
-                    missed_stat_list = ""
-                    time_stat_list = ""
 
                     for joueur in scores_to_process:
                         i += 1
 
                         joueur = dict(joueur)
 
-                        best_time = round(joueur.get('best_time', None) or 0, 3)
-                        joueur['best_time'] = int(best_time) if int(best_time) == float(best_time) else float(best_time)
-
                         if (not "killed_ducks" in joueur) or (not joueur["killed_ducks"]):
                             joueur["killed_ducks"] = _("None!", language)
-
-                        if (not "best_time" in joueur) or (not joueur["best_time"]):
-                            joueur["best_time"] = _('None!', language)
 
                         member = ctx.message.guild.get_member(joueur["id_"])
 
@@ -154,15 +136,10 @@ class Scores(commands.Cog):
                         players_list += "#{i} {name}".format(name=mention, i=i) + "\n\n"
                         exp_stat_list += str(joueur.get(available_stats['exp']['key'], None) or 0) + "\n\n"
                         killed_stat_list += str(joueur.get(available_stats['killed']['key'], None) or 0) + "\n\n"
-                        missed_stat_list += str(joueur.get(available_stats['missed']['key'], None) or 0) + "\n\n"
-                        time_stat_list += str(joueur.get(available_stats['time']['key'], None) or 0) + "\n\n"
 
                     embed.add_field(name=_("Player", language), value=players_list, inline=True)
                     embed.add_field(name=available_stats['exp']['name'], value=exp_stat_list, inline=True)
                     embed.add_field(name=available_stats['killed']['name'], value=killed_stat_list, inline=True)
-                    embed.add_field(name=_("Player", language), value=players_list, inline=True)
-                    embed.add_field(name=available_stats['missed']['name'], value=missed_stat_list, inline=True)
-                    embed.add_field(name=available_stats['time']['name'], value=time_stat_list, inline=True)
 
                     try:
                         await message.edit(embed=embed)
