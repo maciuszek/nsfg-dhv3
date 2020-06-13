@@ -65,7 +65,7 @@ class Admin(commands.Cog):
         await ctx.bot.db.enable_channel(ctx.channel)
         await spawning.planifie(self.bot, ctx.channel, new_day=False)
         await self.bot.send_message(ctx=ctx, message=_(
-            "<:cmd_ChannelAdded_01:439546719143723019> Done, channel {channel} added to the game! Have fun!",
+            "Done, channel {channel} added to the game! Have fun!",
             language).format(**{"channel": ctx.channel.mention}))
 
     @commands.command(aliases=["del_channel", "delchannel"])
@@ -83,7 +83,7 @@ class Admin(commands.Cog):
                 duck.delete()
 
         await self.bot.send_message(ctx=ctx, message=_(
-            "<:cmd_ChannelRemoved_01:439546718737137674> Done, channel {channel} removed from the game. Bye!",
+            "Done, channel {channel} removed from the game. Bye!",
             language).format(**{"channel": ctx.channel.mention}))
         await self.bot.hint(ctx=ctx,
                             message="This does not remove the scores. Use `dh!removeallscoresandstatsonthischannel` to remove them.")
@@ -95,7 +95,7 @@ class Admin(commands.Cog):
         language = await self.bot.db.get_pref(ctx.channel, "language")
         await ctx.bot.db.add_admin(ctx.guild, new_admin)
         await self.bot.send_message(ctx=ctx, message=_(
-            "<:cmd_AdminAdded_01:439549846622568466> {admin} added as an admin to the guild!", language).format(
+            "{admin} added as an admin to the guild!", language).format(
             **{"admin": new_admin.mention}))
 
     @commands.command(aliases=["deladmin"])
@@ -105,7 +105,7 @@ class Admin(commands.Cog):
         language = await self.bot.db.get_pref(ctx.channel, "language")
         await ctx.bot.db.del_admin(ctx.guild, old_admin)
         await self.bot.send_message(ctx=ctx, message=_(
-            "<:cmd_AdminRemoved_01:439549845519335440> {admin} removed from the guild admins.", language).format(
+            "{admin} removed from the guild admins.", language).format(
             **{"admin": old_admin.mention}))
 
     @commands.command(aliases=["spawnduck", "coin"])

@@ -24,8 +24,7 @@ class SetupWizzard(commands.Cog):
         await self.bot.send_message(where=channel_used, message=_("Hello!\n "
                                                                   "Thanks for adding me in there! I'm almost ready to start the game!\n "
                                                                   "Could we please go into the channel where you want the game to be ? "
-                                                                  "Please invoke me there by using `dh!setup`"
-                                                                  "<:event_GuildAdded_01:439550913112309781>"))
+                                                                  "Please invoke me there by using `dh!setup`"))
 
     @commands.command(aliases=["claimserver", "claim_server"])
     @checks.is_server_admin()
@@ -118,7 +117,7 @@ class SetupWizzard(commands.Cog):
 
 
 
-        await self.bot.send_message(ctx=ctx, message=_("I'm done! <:cmd_Setup_01:439551472804429836>\n"
+        await self.bot.send_message(ctx=ctx, message=_("I'm done!\n"
                                                        "Any warning has been sent above. I suggest fixing them, then running the command again!\n"
                                                        "If there is none, congrats! You passed the tests brilliantly!\n"
                                                        "If you are ready to continue with the setup, use the command `dh!setup_settings`. If you just want to play, use `dh!add_channel`. Once used, "

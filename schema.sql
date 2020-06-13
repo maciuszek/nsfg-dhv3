@@ -116,7 +116,7 @@ CREATE TABLE `players` (
   `found_bullets` mediumint(8) UNSIGNED NOT NULL DEFAULT '0',
   `found_bullets_not_taken` mediumint(8) UNSIGNED NOT NULL DEFAULT '0',
   `murders` int(11) NOT NULL DEFAULT '0',
-  `avatar_url` varchar(1000) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'https://discordapp.com/assets/dd4dbc0016779df1378e7812eabaa04d.png',
+  `avatar_url` varchar(1000) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'https://cdn.discordapp.com/app-icons/717398799395323986/957e51f56547219fd3d7f71b17993363.png',
   `hugs` int(11) NOT NULL DEFAULT '0',
   `hugs_no_duck` int(11) NOT NULL DEFAULT '0',
   `hugged_baby_ducks` int(11) NOT NULL DEFAULT '0',

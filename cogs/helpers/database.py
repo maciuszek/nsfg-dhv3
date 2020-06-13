@@ -296,7 +296,7 @@ class Database:
             embed.add_field(name=_("Shots accuracy", language), value=str(level["precision"]))
             embed.add_field(name=_("Weapon reliability", language), value=str(level["fiabilitee"]))
             embed.add_field(name=_("Exp points", language), value=str(await self.get_stat(channel, user, "exp")))
-            embed.set_footer(text='DuckHunt V3 - Discord version by Eyesofcreeper#0001', icon_url='https://cdn.discordapp.com/attachments/335159026075828224/617762017465466881/DuckHunt.png')
+            embed.set_footer(text='DuckHunt V3.1m - Discord version by maciuszek', icon_url='https://cdn.discordapp.com/app-icons/717398799395323986/957e51f56547219fd3d7f71b17993363.png')
             try:
                 await self.bot.send_message(where=channel, embed=embed)
             except:

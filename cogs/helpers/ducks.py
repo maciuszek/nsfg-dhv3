@@ -372,7 +372,7 @@ class BaseDuck:
         await self.bot.db.add_to_stat(self.channel, author, "hugged_nohug_ducks", 1)
 
         if author.id == 296573428293697536:  # ⚜WistfulWizzz⚜#5928
-            return _("<:Wizzz:365870248554921985> Wizzz huggy ducky!", language)
+            return _("Wizzz huggy ducky!", language)
 
         await self.bot.db.add_to_stat(self.channel, author, "exp", -2)
 
@@ -638,14 +638,13 @@ class BabyDuck(BaseDuck):
         easter_eggs = n.date() in [dateutil.easter.easter(n.year), dateutil.easter.easter(n.year) + datetime.timedelta(days=1)]
 
         if easter_eggs:
-            corps = "🥚"
+            corps = " 🥚"
         else:
-            corps = random.choice(["<:BabyDuck_01:439546718263050241>", "<:BabyDuck_02:439551472762355724>", " <:official_BabyDuck_01:439546718527160322>", "<a:a_BabyDuck_01:439546761091088385>",
-                                   " <a:a_BabyDuck_02:574299816155414531>"])
+            corps = ""
 
         cri = "**COIN**"
 
-        self.discord_spawn_str = f"{trace} {corps} < {cri}"
+        self.discord_spawn_str = f"{trace}{corps} < {cri}"
         self.discord_leave_str = _("The baby duck left to take a little nap somewhere ·°'\`'°-.,¸¸.·°'\`", language)
 
     @classmethod
@@ -682,7 +681,7 @@ class BabyDuck(BaseDuck):
         await self.bot.db.add_to_stat(self.channel, author, "hugged_baby_ducks", 1)
         await self.bot.db.add_to_stat(self.channel, author, "exp", 3)
         self.delete()
-        return _("<:cmd_Hug_01:442695336348221451> **SMACK**\tYou hugged the baby duck, and now it is really happy! [3 exp]\n"
+        return _("**SMACK**\tYou hugged the baby duck, and now it is really happy! [3 exp]\n"
                  "The baby duck left, feeling loved", language)
 
 

@@ -63,34 +63,34 @@ msgstr ":ok: Done, user unbanned. :eyes:"
 
 #: cogs/admin_commands.py:65
 msgid ""
-"<:cmd_ChannelAdded_01:439546719143723019> Done, channel {channel} added to "
+"Done, channel {channel} added to "
 "the game! Have fun!"
 msgstr ""
-"<:cmd_ChannelAdded_01:439546719143723019> Done, channel {channel} added to "
+"Done, channel {channel} added to "
 "the game! Have fun!"
 
 #: cogs/admin_commands.py:81
 msgid ""
-"<:cmd_ChannelRemoved_01:439546718737137674> Done, channel {channel} removed "
+"Done, channel {channel} removed "
 "from the game. Bye!"
 msgstr ""
-"<:cmd_ChannelRemoved_01:439546718737137674> Done, channel {channel} removed "
+"Done, channel {channel} removed "
 "from the game. Bye!"
 
 #: cogs/admin_commands.py:90
 msgid ""
-"<:cmd_AdminAdded_01:439549846622568466> {admin} added as an admin to the "
+"{admin} added as an admin to the "
 "guild!"
 msgstr ""
-"<:cmd_AdminAdded_01:439549846622568466> {admin} added as an admin to the "
+"{admin} added as an admin to the "
 "guild!"
 
 #: cogs/admin_commands.py:98
 msgid ""
-"<:cmd_AdminRemoved_01:439549845519335440> {admin} removed from the guild "
+"{admin} removed from the guild "
 "admins."
 msgstr ""
-"<:cmd_AdminRemoved_01:439549845519335440> {admin} removed from the guild "
+"{admin} removed from the guild "
 "admins."
 
 #: cogs/admin_commands.py:143 cogs/admin_commands.py:169
@@ -309,12 +309,12 @@ msgid ""
 "Hello!\n"
 " Thanks for adding me in there! I'm almost ready to start the game!\n"
 " Could we please go into the channel where you want the game to be ? Please "
-"invoke me there by using `dh!setup`<:event_GuildAdded_01:439550913112309781>"
+"invoke me there by using `dh!setup`"
 msgstr ""
 "Hello!\n"
 " Thanks for adding me in there! I'm almost ready to start the game!\n"
 " Could we please go into the channel where you want the game to be ? Please "
-"invoke me there by using `dh!setup`<:event_GuildAdded_01:439550913112309781>"
+"invoke me there by using `dh!setup`"
 
 #: cogs/setup_wizzard.py:35
 msgid ""
@@ -458,7 +458,7 @@ msgstr ""
 
 #: cogs/setup_wizzard.py:121
 msgid ""
-"I'm done! <:cmd_Setup_01:439551472804429836>\n"
+"I'm done!\n"
 "Any warning has been sent above. I suggest fixing them, then running the "
 "command again!\n"
 "If there is none, congrats! You passed the tests brilliantly!\n"
@@ -467,7 +467,7 @@ msgid ""
 "used, ducks will spawn automatically.\n"
 "Thanks for flying DucksAir."
 msgstr ""
-"I'm done! <:cmd_Setup_01:439551472804429836>\n"
+"I'm done!\n"
 "Any warning has been sent above. I suggest fixing them, then running the "
 "command again!\n"
 "If there is none, congrats! You passed the tests brilliantly!\n"
@@ -1722,8 +1722,8 @@ msgstr ""
 "first! [missed: -1 xp]"
 
 #: cogs/helpers/ducks.py:376
-msgid "<:Wizzz:365870248554921985> Wizzz huggy ducky!"
-msgstr "<:Wizzz:365870248554921985> Wizzz huggy ducky!"
+msgid "Wizzz huggy ducky!"
+msgstr "Wizzz huggy ducky!"
 
 #: cogs/helpers/ducks.py:381
 msgid ""
@@ -1799,11 +1799,11 @@ msgstr ""
 
 #: cogs/helpers/ducks.py:686
 msgid ""
-"<:cmd_Hug_01:442695336348221451> **SMACK**\tYou hugged the baby duck, and "
+"**SMACK**\tYou hugged the baby duck, and "
 "now it is really happy! [3 exp]\n"
 "The baby duck left, feeling loved"
 msgstr ""
-"<:cmd_Hug_01:442695336348221451> **SMACK**\tYou hugged the baby duck, and "
+"**SMACK**\tYou hugged the baby duck, and "
 "now it is really happy! [3 exp]\n"
 "The baby duck left, feeling loved"
 
