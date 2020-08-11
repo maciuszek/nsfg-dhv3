@@ -6,9 +6,9 @@ NSFG-DHV3 is a fork of https://github.com/DuckHunt-discord/DHV3, providing a lig
 
 Installation requirements and instuctions can be derived from https://kb.api-d.com/en/code/duckhunt-how-to/
 
-Note: I won't be providing any opions or suggestions regarding hosting the bot
-
 ### Configuration
+
+Configuration can be managed through environemnt variables
 
 ENVIRONMENT VARIABLE | REQUIRED
 ------------- | -------------
