@@ -1,6 +1,6 @@
 # NSFG-DHV3
 
-NSFG-DHV3 is a fork of https://github.com/DuckHunt-discord/DHV3, providing a lighter and server agnostic implementation
+NSFG-DHV3 is a customized implementation of https://github.com/DuckHunt-discord/DHV3 modified to be unbranded, lighter and heroku ready
 
 ## Installation
 
