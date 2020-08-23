@@ -28,7 +28,3 @@ To set-up this bot in your discord server read the following:
 
 * https://discordpy.readthedocs.io/en/latest/discord.html
 * https://docs.duckhunt.me/bot-administration/admin-quickstart
-
-## Playing
-
-https://docs.duckhunt.me/players-guide/players-quickstart
