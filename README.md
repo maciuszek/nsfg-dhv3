@@ -8,7 +8,7 @@ Installation requirements and instuctions can be derived from https://kb.api-d.c
 
 ### Configuration
 
-Configuration can be managed through environemnt variables
+Configuration is managed through environemnt variables
 
 ENVIRONMENT VARIABLE | REQUIRED
 ------------- | -------------
