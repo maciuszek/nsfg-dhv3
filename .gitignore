@@ -3,3 +3,4 @@ nsfg-dhv3.code-workspace
 *.pyc
 
 env.sh
+_backup
